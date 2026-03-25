@@ -1,48 +1,39 @@
 # AI Town 🏠💻💌
 
-[Live Demo](https://www.convex.dev/ai-town)
+[在线演示](https://www.convex.dev/ai-town)
 
-[Join our community Discord: AI Stack Devs](https://discord.gg/PQUmTBTGmT)
+[加入 Discord 社区: AI Stack Devs](https://discord.gg/PQUmTBTGmT)
 
 <img width="1454" alt="Screen Shot 2023-08-14 at 10 01 00 AM" src="https://github.com/a16z-infra/ai-town/assets/3489963/a4c91f17-23ed-47ec-8c4e-9f9a8505057d">
 
-AI Town is a virtual town where AI characters live, chat and socialize.
+AI Town 是一个虚拟小镇，AI 角色在这里生活、聊天和社交。
 
-This project is a deployable starter kit for easily building and customizing your own version of AI
-town. Inspired by the research paper
-[_Generative Agents: Interactive Simulacra of Human Behavior_](https://arxiv.org/pdf/2304.03442.pdf).
+该项目是一个可部署的入门套件，用于轻松构建和定制你自己的 AI 小镇版本。其灵感源自研究论文《[_生成式代理：人类行为的交互式模拟_](https://arxiv.org/pdf/2304.03442.pdf)》。
 
-The primary goal of this project, beyond just being a lot of fun to work on, is to provide a
-platform with a strong foundation that is meant to be extended. The back-end natively supports
-shared global state, transactions, and a simulation engine and should be suitable from everything
-from a simple project to play around with to a scalable, multi-player game. A secondary goal is to
-make a JS/TS framework available as most simulators in this space (including the original paper
-above) are written in Python.
+该项目的主要目标除了开发乐趣之外，还在于提供一个具有强大基础、易于扩展的平台。后端原生支持共享全局状态、事务和模拟引擎，适用于从简单的练手项目到可扩展的多人游戏等各种场景。次要目标是提供 JS/TS 框架，因为该领域的大多数模拟器（包括上述原始论文）都是用 Python 编写的。
 
-## Overview
+## 概览
 
-- 💻 [Stack](#stack)
-- 🧠 [Installation](#installation) (cloud, local, Docker, self-host, Fly.io, ...)
-- 💻️ [Windows Pre-requisites](#windows-installation)
-- 🤖 [Configure your LLM of choice](#connect-an-llm) (Ollama, OpenAI, Together.ai, ...)
-- 👤 [Customize - YOUR OWN simulated world](#customize-your-own-simulation)
-- 👩‍💻 [Deploying to production](#deploy-the-app-to-production)
-- 🐛 [Troubleshooting](#troubleshooting)
+- 💻 [技术栈](#技术栈)
+- 🧠 [安装](#安装) (云端、本地、Docker、自托管、Fly.io...)
+- 💻️ [Windows 环境准备](#windows-installation)
+- 🤖 [配置你的 LLM](#connect-an-llm) (Ollama, OpenAI, Together.ai, ...)
+- 👤 [自定义——属于你自己的模拟世界](#customize-your-own-simulation)
+- 👩‍💻 [部署到生产环境](#deploy-the-app-to-production)
+- 🐛 [故障排除](#troubleshooting)
 
-## Stack
+## 技术栈
 
-- Game engine, database, and vector search: [Convex](https://convex.dev/)
-- Auth (Optional): [Clerk](https://clerk.com/)
-- Default chat model is `llama3` and embeddings with `mxbai-embed-large`.
-- Local inference: [Ollama](https://github.com/jmorganca/ollama)
-- Configurable for other cloud LLMs: [Together.ai](https://together.ai/) or anything that speaks the
-  [OpenAI API](https://platform.openai.com/). PRs welcome to add more cloud provider support.
-- Background Music Generation: [Replicate](https://replicate.com/) using
-  [MusicGen](https://huggingface.co/spaces/facebook/MusicGen)
+- 游戏引擎、数据库和向量搜索: [Convex](https://convex.dev/)
+- 身份验证（可选）: [Clerk](https://clerk.com/)
+- 默认聊天模型为 `llama3` 嵌入模型使用 `mxbai-embed-large`.
+- 本地推理: [Ollama](https://github.com/jmorganca/ollama)
+- 可配置其他云端 LLM: [Together.ai](https://together.ai/) 或任何支持 [OpenAI API](https://platform.openai.com/) 的模型，欢迎通过 PR 增加更多云供应商支持。
+- 背景音乐生成: [Replicate](https://replicate.com/) 使用 [MusicGen](https://huggingface.co/spaces/facebook/MusicGen)
 
-Other credits:
+其他致谢:
 
-- Pixel Art Generation: [Replicate](https://replicate.com/),
+- 像素艺术生成: [Replicate](https://replicate.com/),
   [Fal.ai](https://serverless.fal.ai/lora)
 - All interactions, background music and rendering on the <Game/> component in the project are
   powered by [PixiJS](https://pixijs.com/).
@@ -55,29 +46,25 @@ Other credits:
 - The UI is based on original assets by
   [Mounir Tohami](https://mounirtohami.itch.io/pixel-art-gui-elements)
 
-# Installation
+# 安装
 
-The overall steps are:
+总体步骤如下:
 
-1. [Build and deploy](#build-and-deploy)
-2. [Connect it to an LLM](#connect-an-llm)
+1. [构建与部署](#构建与部署)
+2. [连接 LLM](#连接 LLM)
 
-## Build and Deploy
+## 构建与部署
 
-There are a few ways to run the app on top of Convex (the backend).
+有几种方式可以在 Convex（后端）之上运行该应用。
 
-1. The standard Convex setup, where you develop locally or in the cloud. This requires a Convex
-   account(free). This is the easiest way to depoy it to the cloud and seriously develop.
-2. If you want to try it out without an account and you're okay with Docker, the Docker Compose
-   setup is nice and self-contained.
-3. There's a community fork of this project offering a one-click install on
-   [Pinokio](https://pinokio.computer/item?uri=https://github.com/cocktailpeanutlabs/aitown) for
-   anyone interested in running but not modifying it 😎.
-4. You can also deploy it to [Fly.io](https://fly.io/). See [./fly](./fly) for instructions.
+1. 标准 Convex 设置：在本地或云端开发。这需要一个 Convex 账号（免费）。这是部署到云端并进行严肃开发最简单的方法。
+2. Docker Compose 设置：如果你想在没有账号的情况下尝试，且熟悉 Docker，这种方式非常独立且完整。
+3. Pinokio 一键安装：本项目有一个社区分支，在 [Pinokio](https://pinokio.computer/item?uri=https://github.com/cocktailpeanutlabs/aitown) 上为只想运行而不打算修改代码的用户提供了一键安装方案 😎。
+4. Fly.io：你也可以将其部署到 [Fly.io](https://fly.io/)， 详见 [./fly](./fly) 目录下的说明。
 
 ### Standard Setup
 
-Note, if you're on Windows, see [below](#windows-installation).
+注意：如果你使用的是 Windows，请参阅 [below](#windows-installation).
 
 ```sh
 git clone https://github.com/a16z-infra/ai-town.git
@@ -85,70 +72,69 @@ cd ai-town
 npm install
 ```
 
-This will require logging into your Convex account, if you haven't already.
+这需要登录你的 Convex 账号（如果尚未登录）。
 
-To run it:
+运行应用：
 
 ```sh
 npm run dev
 ```
 
-You can now visit http://localhost:5173.
+现在你可以访问 http://localhost:5173
 
-If you'd rather run the frontend and backend separately (which syncs your backend functions as
-they're saved), you can run these in two terminals:
+如果你希望分别运行前端和后端（这会在保存后端函数时同步它们），可以在两个终端中分别运行：
 
 ```bash
 npm run dev:frontend
 npm run dev:backend
 ```
 
-See [package.json](./package.json) for details.
+详情参阅 [package.json](./package.json) 。
 
-### Using Docker Compose with self-hosted Convex
+### 使用 Docker Compose 和自托管 Convex
 
-You can also run the Convex backend with the self-hosted Docker container. Here we'll set it up to
-run the frontend, backend, and dashboard all via docker compose.
+你也可以通过自托管 Docker 容器运行 Convex 后端。我们将通过 docker compose 一次性设置前端、后端和仪表板。
 
 ```sh
 docker compose up --build -d
 ```
 
-The container will keep running in the background if you pass `-d`. After you've done it once, you
-can `stop` and `start` services.
+如果加上 `-d` 参数，容器将在后台持续运行。之后你可以直接 `stop` 和 `start` 服务。
 
-- The frontend will be running on http://localhost:5173.
-- The backend will be running on http://localhost:3210 (3211 for the http api).
-- The dashboard will be running on http://localhost:6791.
+前端地址：http://localhost:5173
 
-To log into the dashboard and deploy from the convex CLI, you will need to generate an admin key.
+后端地址：http://localhost:3210（HTTP API 为 3211）
+
+仪表板地址：http://localhost:6791
+
+要登录仪表板并从 Convex CLI 部署，你需要生成一个管理员密钥（admin key）。
 
 ```sh
 docker compose exec backend ./generate_admin_key.sh
 ```
 
-Add it to your `.env.local` file. Note: If you run `down` and `up`, you'll have to generate the key
-again and update the `.env.local` file.
+将生成的密钥添加到你的 `.env.local` 文件中。注意：如果你运行了 `down` 之后再 `up`，你需要重新生成密钥并更新文件。
+
 
 ```sh
 # in .env.local
-CONVEX_SELF_HOSTED_ADMIN_KEY="<admin-key>" # Ensure there are quotes around it
+CONVEX_SELF_HOSTED_ADMIN_KEY="<admin-key>" # 确保带引号
 CONVEX_SELF_HOSTED_URL="http://127.0.0.1:3210"
 ```
 
-Then set up the Convex backend (one time):
+然后设置 Convex 后端（仅需一次）：
 
 ```sh
 npm run predev
 ```
 
-To continuously deploy new code to the backend and print logs:
+持续向后端部署新代码并打印日志：
 
 ```sh
 npm run dev:backend
 ```
 
-To see the dashboard, visit `http://localhost:6791` and provide the admin key you generated earlier.
+访问 `http://localhost:6791` 并输入之前生成的管理员密钥来查看仪表板。
 
 ### Configuring Docker for Ollama
 
@@ -167,7 +153,7 @@ docker compose exec backend /bin/bash curl http://host.docker.internal:11434
 If it says "Ollama is running", it's good! Otherwise, check out the
 [Troubleshooting](#troubleshooting) section.
 
-## Connect an LLM
+## 连接 LLM
 
 Note: If you want to run the backend in the cloud, you can either use a cloud-based LLM API, like
 OpenAI or Together.ai or you can proxy the traffic from the cloud to your local Ollama. See
