@@ -28,7 +28,7 @@ export async function startConversationMessage(
   );
   const embedding = await embeddingsCache.fetch(
     ctx,
-    `${player.name} is talking to ${otherPlayer.name}`,
+    `${player.name} 正在与 ${otherPlayer.name} 交谈`,
   );
 
   const memories = await memory.searchMemories(
@@ -42,17 +42,17 @@ export async function startConversationMessage(
     (m) => m.data.type === 'conversation' && m.data.playerIds.includes(otherPlayerId),
   );
   const prompt = [
-    `You are ${player.name}, and you just started a conversation with ${otherPlayer.name}.`,
+    `你是 ${player.name}，你刚开始与 ${otherPlayer.name} 进行对话。`,
   ];
   prompt.push(...agentPrompts(otherPlayer, agent, otherAgent ?? null));
   prompt.push(...previousConversationPrompt(otherPlayer, lastConversation));
   prompt.push(...relatedMemoriesPrompt(memories));
   if (memoryWithOtherPlayer) {
     prompt.push(
-      `Be sure to include some detail or question about a previous conversation in your greeting.`,
+      `请务必在你的问候语中包含有关之前对话的某些细节或问题。`,
     );
   }
-  const lastPrompt = `${player.name} to ${otherPlayer.name}:`;
+  const lastPrompt = `${player.name} 对 ${otherPlayer.name}:`;
   prompt.push(lastPrompt);
 
   const { content } = await chatCompletion({
@@ -95,18 +95,18 @@ export async function continueConversationMessage(
   const started = new Date(conversation.created);
   const embedding = await embeddingsCache.fetch(
     ctx,
-    `What do you think about ${otherPlayer.name}?`,
+    `你对 ${otherPlayer.name} 有什么看法？`,
   );
   const memories = await memory.searchMemories(ctx, player.id as GameId<'players'>, embedding, 3);
   const prompt = [
-    `You are ${player.name}, and you're currently in a conversation with ${otherPlayer.name}.`,
-    `The conversation started at ${started.toLocaleString()}. It's now ${now.toLocaleString()}.`,
+    `你是 ${player.name}，你目前正在与 ${otherPlayer.name} 对话。`,
+    `对话开始于 ${started.toLocaleString()}。现在是 ${now.toLocaleString()}。`,
   ];
   prompt.push(...agentPrompts(otherPlayer, agent, otherAgent ?? null));
   prompt.push(...relatedMemoriesPrompt(memories));
   prompt.push(
-    `Below is the current chat history between you and ${otherPlayer.name}.`,
-    `DO NOT greet them again. Do NOT use the word "Hey" too often. Your response should be brief and within 200 characters.`,
+    `以下是你与 ${otherPlayer.name} 之间的当前聊天记录。`,
+    `不要再次向他们打招呼。不要过于频繁地使用“嘿”之类的词。你的回答应简洁，字数控制在 200 个字符以内。`,
   );
 
   const llmMessages: LLMMessage[] = [
@@ -122,7 +122,7 @@ export async function continueConversationMessage(
       conversation.id as GameId<'conversations'>,
     )),
   ];
-  const lastPrompt = `${player.name} to ${otherPlayer.name}:`;
+  const lastPrompt = `${player.name} 对 ${otherPlayer.name}:`;
   llmMessages.push({ role: 'user', content: lastPrompt });
 
   const { content } = await chatCompletion({
@@ -150,13 +150,13 @@ export async function leaveConversationMessage(
     },
   );
   const prompt = [
-    `You are ${player.name}, and you're currently in a conversation with ${otherPlayer.name}.`,
-    `You've decided to leave the question and would like to politely tell them you're leaving the conversation.`,
+    `你是 ${player.name}，你目前正在与 ${otherPlayer.name} 对话。`,
+    `你决定结束对话，并想礼貌地告诉对方你要离开了。`,
   ];
   prompt.push(...agentPrompts(otherPlayer, agent, otherAgent ?? null));
   prompt.push(
-    `Below is the current chat history between you and ${otherPlayer.name}.`,
-    `How would you like to tell them that you're leaving? Your response should be brief and within 200 characters.`,
+    `以下是你与 ${otherPlayer.name} 之间的当前聊天记录。`,
+    `你打算如何告诉他们你要离开？你的回答应简洁，字数控制在 200 个字符以内。`,
   );
   const llmMessages: LLMMessage[] = [
     {
@@ -171,7 +171,7 @@ export async function leaveConversationMessage(
       conversation.id as GameId<'conversations'>,
     )),
   ];
-  const lastPrompt = `${player.name} to ${otherPlayer.name}:`;
+  const lastPrompt = `${player.name} 对 ${otherPlayer.name}:`;
   llmMessages.push({ role: 'user', content: lastPrompt });
 
   const { content } = await chatCompletion({
@@ -189,11 +189,11 @@ function agentPrompts(
 ): string[] {
   const prompt = [];
   if (agent) {
-    prompt.push(`About you: ${agent.identity}`);
-    prompt.push(`Your goals for the conversation: ${agent.plan}`);
+    prompt.push(`关于你：${agent.identity}`);
+    prompt.push(`你此次对话的目标：${agent.plan}`);
   }
   if (otherAgent) {
-    prompt.push(`About ${otherPlayer.name}: ${otherAgent.identity}`);
+    prompt.push(`关于 ${otherPlayer.name}：${otherAgent.identity}`);
   }
   return prompt;
 }
@@ -207,9 +207,9 @@ function previousConversationPrompt(
     const prev = new Date(conversation.created);
     const now = new Date();
     prompt.push(
-      `Last time you chatted with ${
+      `你上次与 ${
         otherPlayer.name
-      } it was ${prev.toLocaleString()}. It's now ${now.toLocaleString()}.`,
+      } 聊天是在 ${prev.toLocaleString()}。现在是 ${now.toLocaleString()}。`,
     );
   }
   return prompt;
@@ -218,7 +218,7 @@ function previousConversationPrompt(
 function relatedMemoriesPrompt(memories: memory.Memory[]): string[] {
   const prompt = [];
   if (memories.length > 0) {
-    prompt.push(`Here are some related memories in decreasing relevance order:`);
+    prompt.push(`以下是一些按相关性递减排序的相关记忆：`);
     for (const memory of memories) {
       prompt.push(' - ' + memory.description);
     }
@@ -240,7 +240,7 @@ async function previousMessages(
     const recipient = message.author === player.id ? otherPlayer : player;
     llmMessages.push({
       role: 'user',
-      content: `${author.name} to ${recipient.name}: ${message.text}`,
+      content: `${author.name} 对 ${recipient.name}: ${message.text}`,
     });
   }
   return llmMessages;
@@ -347,6 +347,6 @@ export const queryPromptData = internalQuery({
 
 function stopWords(otherPlayer: string, player: string) {
   // These are the words we ask the LLM to stop on. OpenAI only supports 4.
-  const variants = [`${otherPlayer} to ${player}`];
+  const variants = [`${otherPlayer} 对 ${player}`];
   return variants.flatMap((stop) => [stop + ':', stop.toLowerCase() + ':']);
 }
