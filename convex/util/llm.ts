@@ -1,10 +1,10 @@
 // 没错！没有任何导入，也没有任何依赖 🤯
 
-const OPENAI_EMBEDDING_DIMENSION = 1536;
+const OPENAI_EMBEDDING_DIMENSION = 1024;
 const TOGETHER_EMBEDDING_DIMENSION = 768;
 const OLLAMA_EMBEDDING_DIMENSION = 1024;
 
-export const EMBEDDING_DIMENSION: number = OLLAMA_EMBEDDING_DIMENSION;
+export const EMBEDDING_DIMENSION: number = OPENAI_EMBEDDING_DIMENSION;
 
 export function detectMismatchedLLMProvider() {
   switch (EMBEDDING_DIMENSION) {
@@ -51,9 +51,9 @@ export function getLLMConfig(): LLMConfig {
     }
     return {
       provider: 'openai',
-      url: 'https://api.openai.com',
-      chatModel: process.env.OPENAI_CHAT_MODEL ?? 'gpt-4o-mini',
-      embeddingModel: process.env.OPENAI_EMBEDDING_MODEL ?? 'text-embedding-ada-002',
+      url: 'https://dashscope.aliyuncs.com/compatible-mode',
+      chatModel: process.env.OPENAI_CHAT_MODEL ?? 'qwen3.5-flash',
+      embeddingModel: process.env.OPENAI_EMBEDDING_MODEL ?? 'text-embedding-v4',
       stopWords: [],
       apiKey: process.env.OPENAI_API_KEY,
     };
