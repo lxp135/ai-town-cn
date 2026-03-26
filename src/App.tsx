@@ -5,9 +5,9 @@ import a16zImg from '../assets/a16z.png';
 import convexImg from '../assets/convex.svg';
 import starImg from '../assets/star.svg';
 import helpImg from '../assets/help.svg';
-// import { UserButton } from '@clerk/clerk-react';
-// import { Authenticated, Unauthenticated } from 'convex/react';
-// import LoginButton from './components/buttons/LoginButton.tsx';
+// import { UserButton } from '@clerk/clerk-react'; // 导入 Clerk 用户按钮组件
+// import { Authenticated, Unauthenticated } from 'convex/react'; // 导入 Convex 身份验证状态组件
+// import LoginButton from './components/buttons/LoginButton.tsx'; // 导入登录按钮组件
 import { useState } from 'react';
 import ReactModal from 'react-modal';
 import MusicButton from './components/buttons/MusicButton.tsx';
@@ -27,38 +27,29 @@ export default function Home() {
         isOpen={helpModalOpen}
         onRequestClose={() => setHelpModalOpen(false)}
         style={modalStyles}
-        contentLabel="Help modal"
+        contentLabel="帮助弹窗"
         ariaHideApp={false}
       >
         <div className="font-body">
-          <h1 className="text-center text-6xl font-bold font-display game-title">Help</h1>
+          <h1 className="text-center text-6xl font-bold font-display game-title">帮助</h1>
           <p>
-            Welcome to AI town. AI town supports both anonymous <i>spectators</i> and logged in{' '}
-            <i>interactivity</i>.
+            欢迎来到 AI 小镇。AI 小镇同时支持匿名<i>观战</i>和登录后的<i>互动</i>模式。
           </p>
-          <h2 className="text-4xl mt-4">Spectating</h2>
+          <h2 className="text-4xl mt-4">观战</h2>
           <p>
-            Click and drag to move around the town, and scroll in and out to zoom. You can click on
-            an individual character to view its chat history.
+            点击并拖动以在小镇中移动，滚动鼠标滚轮进行缩放。你可以点击单个角色来查看其聊天历史记录。
           </p>
-          <h2 className="text-4xl mt-4">Interactivity</h2>
+          <h2 className="text-4xl mt-4">互动</h2>
           <p>
-            If you log in, you can join the simulation and directly talk to different agents! After
-            logging in, click the "Interact" button, and your character will appear somewhere on the
-            map with a highlighted circle underneath you.
+            如果你登录，就可以加入模拟环境并直接与不同的智能体交谈！登录后，点击“互动”按钮，你的角色将出现在地图上的某个位置，脚下会显示高亮圆圈。
           </p>
-          <p className="text-2xl mt-2">Controls:</p>
-          <p className="mt-4">Click to navigate around.</p>
+          <p className="text-2xl mt-2">操作控制：</p>
+          <p className="mt-4">点击地图进行导航移动。</p>
           <p className="mt-4">
-            To talk to an agent, click on them and then click "Start conversation," which will ask
-            them to start walking towards you. Once they're nearby, the conversation will start, and
-            you can speak to each other. You can leave at any time by closing the conversation pane
-            or moving away. They may propose a conversation to you - you'll see a button to accept
-            in the messages panel.
+            要与智能体交谈，请点击他们，然后点击“开始对话”，这会请求他们向你走来。一旦他们靠近，对话就会开始，你们可以互相交流。你可以随时通过关闭对话面板或走开来离开对话。他们也可能主动向你发起对话——你会在消息面板中看到接受按钮。
           </p>
           <p className="mt-4">
-            AI town only supports {MAX_HUMAN_PLAYERS} humans at a time. If you're idle for five
-            minutes, you'll be automatically removed from the simulation.
+            AI 小镇一次仅支持 {MAX_HUMAN_PLAYERS} 名人类用户同时在线。如果你闲置五分钟，系统将自动把你从模拟环境中移除。
           </p>
         </div>
       </ReactModal>
@@ -74,15 +65,15 @@ export default function Home() {
 
       <div className="w-full lg:h-screen min-h-screen relative isolate overflow-hidden lg:p-8 shadow-2xl flex flex-col justify-start">
         <h1 className="mx-auto text-4xl p-3 sm:text-8xl lg:text-9xl font-bold font-display leading-none tracking-wide game-title w-full text-left sm:text-center sm:w-auto">
-          AI Town
+          AI 小镇
         </h1>
 
         <div className="max-w-xs md:max-w-xl lg:max-w-none mx-auto my-4 text-center text-base sm:text-xl md:text-2xl text-white leading-tight shadow-solid">
-          A virtual town where AI characters live, chat and socialize.
+          一个 AI 角色在此生活、聊天和社交的虚拟小镇。
           {/* <Unauthenticated>
             <div className="my-1.5 sm:my-0" />
-            Log in to join the town
-            <br className="block sm:hidden" /> and the conversation!
+            登录以加入小镇
+            <br className="block sm:hidden" /> 并参与对话！
           </Unauthenticated> */}
         </div>
 
@@ -97,7 +88,7 @@ export default function Home() {
             </Button>
             <InteractButton />
             <Button imgUrl={helpImg} onClick={() => setHelpModalOpen(true)}>
-              Help
+              帮助
             </Button>
           </div>
           <a href="https://a16z.com">
